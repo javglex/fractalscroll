@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<!-- H5CanvasDrawPrimitives.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8" >
+<title>HTML5 Drawing Primitive Shapes</title>
+<style>
+#canvas {
+  border: 1px solid red;
+}
+</style>
+ 
+<script>
+window.addEventListener("load", init, true);
+
+var last_known_scroll_position = 0;
+var ticking = false;
+var canvas;
+var context;
+
+function init(){
+  canvas = document.getElementById("canvas");
+  canvas.width  = document.documentElement.clientWidth;
+  canvas.height = document.documentElement.clientHeight;
+  context = canvas.getContext("2d");
+
+  draw(0);
+  window.addEventListener('mousewheel', function(e) {
+    last_known_scroll_position += e.wheelDelta||e.detail;
+
+    if (!ticking) {
+
+      window.requestAnimationFrame(function() {
+        draw(last_known_scroll_position/50);
+        ticking = false;
+      });
+       
+      ticking = true;
+
+    }
+  });
+
+}
+
+function draw(scroll) {
+  // Retrieve the canvas element and set its CSS style
+  context.clearRect(0, 0, canvas.width, canvas.height);
+
+  var scale=canvas.height/100;
+
+  context.beginPath();
+
+  for (i=0; i< 1080; i++) {
+
+    var angle = 0.1 * i;
+    x=(1+angle)*Math.cos(angle+scroll);
+    y=(1+angle)*Math.sin(angle+scroll);
+    context.lineTo(canvas.width/2 + x*scale, canvas.height/2 + y*scale);
+    for (j=0; j<5; j++){
+      context.lineTo(canvas.width/2 + x*scale+i/(100/j), canvas.height/2 + y*scale+i/(100/j));
+    }
+
+    context.lineWidth=3;
+    context.strokeStyle = 'black';
+
+  }
+  
+  context.stroke();
+
+  
+}
+
+
+
+</script>
+</head>
+ 
+<body>
+  <canvas id="canvas">Canvas is not supported</canvas>
+</body>
+</html>
